@@ -1,0 +1,30 @@
+#/usr/bin/env bash 
+# What? This script prints all its arguments, in various forms of expansion.
+# Why? Serve to aid in {debugging, education}.
+# All output is printed to stdout, not stderr.
+#
+# Example usages:
+#   $ ./argv foo "hello       world" "bar"
+#   $ ./argv foo "hello $PATH world" "bar"
+#   $ ./argv foo 'hello $PATH world' "bar"
+ 
+argv=("$@") 
+argn=${#argv[@]} 
+
+echo "Called with $argn arguments, here quoted:"
+for (( i=0 ; i < $argn ; i++ )); do 
+  echo "  Argument \$$((i+1)): '${argv[$i]}'"
+done
+
+echo "------"
+echo 'echo "$0 ${argv[@]@Q}"'
+(set -x; echo "$0 ${argv[@]@Q}") 2>&1  # @Q expansion requires bash>=4.4
+
+echo "------"
+echo 'echo "$0 $@"'
+(set -x; echo "$0 $@") 2>&1
+
+echo "------"
+echo 'echo "$0 $*"'
+(set -x; echo "$0 $*") 2>&1
+
